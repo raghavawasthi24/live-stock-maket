@@ -18,6 +18,8 @@ const stockController = {
         symbolList.map((symbol) => yahooFinance.quote(symbol))
       );
 
+      console.log("Fetched stock data:", results);
+
       // Format response for frontend
       const formatted = results.map((stock) => ({
         symbol: stock.symbol,

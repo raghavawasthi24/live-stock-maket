@@ -1,4 +1,5 @@
 "use client";
+import Charts from "@/components/shared/charts";
 import { DataTable } from "@/components/shared/datatable";
 import { Card } from "@/components/ui/card";
 import { ColumnDef, ColumnPinningState } from "@tanstack/react-table";
@@ -109,6 +110,28 @@ export const data: Stock[] = [
     gainLoss: 1785,
     gainLossPercent: 1.84,
   },
+  {
+    symbol: "TATAMOTORS.NS",
+    name: "Tata Motors",
+    qty: 40,
+    buyPrice: 480,
+    currentPrice: 472.55,
+    investment: 19200,
+    presentValue: 18902,
+    gainLoss: -298,
+    gainLossPercent: -1.55,
+  },
+  {
+    symbol: "RELIANCE.NS",
+    name: "Reliance Industries",
+    qty: 10,
+    buyPrice: 2400,
+    currentPrice: 2495.15,
+    investment: 24000,
+    presentValue: 24951.5,
+    gainLoss: 951.5,
+    gainLossPercent: 3.96,
+  }
 ];
 
 
@@ -119,15 +142,15 @@ export default function Home() {
   });
 
   return (
-    <main className="m-4">
-      <div className="w-full">
+      <Card className="p-4 m-4 flex gap-4">
+        <h1 className="font-bold text-lg">My Stock Portfolio</h1>
+        <Charts data={data}/>
         <DataTable
           columns={columns}
           data={data}
           columnPinning={columnPinning}
           setColumnPinning={setColumnPinning}
         />
-      </div>
-    </main>
+      </Card>
   );
 }
