@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnPinningState,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -20,27 +19,22 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  columnPinning?: ColumnPinningState;
-  setColumnPinning?: (
-    updater:
-      | ColumnPinningState
-      | ((old: ColumnPinningState) => ColumnPinningState)
-  ) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  columnPinning,
-  setColumnPinning,
 }: DataTableProps<TData, TValue>) {
+  const columnPinning = {
+    left: ["symbol"],
+    right: [],
+  };
   const table = useReactTable({
     data,
     columns,
     state: {
       columnPinning,
     },
-    onColumnPinningChange: setColumnPinning,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -62,17 +56,16 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableHead
                     key={header.id}
-                    className={`border bg-gray-100 ${
-                      isPinnedLeft ? "sticky left-0 z-20 shadow-md" : ""
-                    } ${isPinnedRight ? "sticky right-0 z-20 shadow-md" : ""}`}
+                    className={`border bg-gray-100 ${isPinnedLeft ? "sticky left-0 z-20 shadow-md" : ""
+                      } ${isPinnedRight ? "sticky right-0 z-20 shadow-md" : ""}`}
                     style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 );
               })}
@@ -93,11 +86,11 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`border bg-white ${
-                        isPinnedLeft ? "sticky left-0 z-10 shadow-md bg-gray-50" : ""
-                      } ${
-                        isPinnedRight ? "sticky right-0 z-10 shadow-md" : ""
-                      }`}
+                      className={`border bg-white ${isPinnedLeft
+                          ? "sticky left-0 z-10 shadow-md bg-gray-50"
+                          : ""
+                        } ${isPinnedRight ? "sticky right-0 z-10 shadow-md" : ""
+                        }`}
                       style={{ width: cell.column.getSize() }}
                     >
                       {flexRender(

@@ -2,34 +2,30 @@
 import { getData } from "@/actions/getData";
 import Charts from "@/components/shared/charts";
 import { DataTable } from "@/components/shared/datatable";
-import { Button } from "@/components/ui/button";
+import Header from "@/components/shared/header";
 import { Card } from "@/components/ui/card";
 import { columns, Stock } from "@/constant";
-import { ColumnPinningState } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { RefreshCw } from "lucide-react";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
-let socket: any;
+let socket:Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
-  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
-    left: ["symbol"],
-    right: [],
-  });
-
   const [data, setData] = useState<Stock[]>([]);
   const [countdown, setCountdown] = useState({
     state: "Refresh",
     time: 15,
   });
 
+  const intervalId = useRef<NodeJS.Timeout>(null);
+
   useEffect(() => {
+    //function to get stock data
     const fetchData = async () => {
       setCountdown((prev) => ({ ...prev, state: "Refreshing" }));
       const result = await getData();
       if (result.success) {
-        console.log(result.data);
         setData(result.data);
         setCountdown({ state: "Refresh", time: 15 });
       }
@@ -37,41 +33,33 @@ export default function Home() {
 
     fetchData();
 
-    socket = io("http://localhost:5001");
+    /** 
+    get data immediately when client connects with server
+    re-fetch api when server ask @every 15 sec
+    */
 
+    socket = io(process.env.NEXT_PUBLIC_BACKEND_URL);
     socket.on("connect", fetchData);
     socket.on("response", fetchData);
 
-    setInterval(() => {
+    intervalId.current = setInterval(() => {
       setCountdown((prev) => {
         return { ...prev, time: prev.time > 0 ? prev.time - 1 : 0 };
       });
     }, 1000);
 
-    // cleanup when component unmounts
+    //break connection if client inactive
     return () => {
       socket.disconnect();
+      if (intervalId.current) clearInterval(intervalId.current);
     };
   }, []);
 
   return (
     <Card className="p-4 m-4 flex gap-4">
-      <div className="flex justify-between items-center w-full">
-        <h1 className="font-bold text-lg">My Stock Portfolio</h1>
-        <Button variant="outline" className="text-green-700">
-          <RefreshCw className="h-4 w-4" />
-          {countdown.state} {countdown.time > 0 ? `in ${countdown.time}` : null}
-        </Button>
-      </div>
-
+      <Header countdown={countdown} />
       <Charts data={data} />
-
-      <DataTable
-        columns={columns}
-        data={data}
-        columnPinning={columnPinning}
-        setColumnPinning={setColumnPinning}
-      />
+      <DataTable columns={columns} data={data} />
     </Card>
   );
 }

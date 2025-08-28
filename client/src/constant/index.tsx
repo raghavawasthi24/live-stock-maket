@@ -13,6 +13,11 @@ export type Stock = {
   dividendYield: number;
 };
 
+export interface CountdownProps {
+  state: string;
+  time: number;
+}
+
 export const columns: ColumnDef<Stock>[] = [
   {
     accessorKey: "symbol",
@@ -82,5 +87,5 @@ export const columns: ColumnDef<Stock>[] = [
     header: "Dividend Yield",
     size: 150,
     cell: ({ row }) => `${row.original.dividendYield.toFixed(2)}%`,
-  }
+  },
 ];
