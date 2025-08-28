@@ -31,8 +31,6 @@ export default function Home() {
       }
     };
 
-    fetchData();
-
     /** 
     get data immediately when client connects with server
     re-fetch api when server ask @every 15 sec

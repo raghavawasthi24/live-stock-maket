@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -21,7 +22,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+function DataTableComponent<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -29,6 +30,7 @@ export function DataTable<TData, TValue>({
     left: ["symbol"],
     right: [],
   };
+
   const table = useReactTable({
     data,
     columns,
@@ -56,16 +58,17 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableHead
                     key={header.id}
-                    className={`border bg-gray-100 ${isPinnedLeft ? "sticky left-0 z-20 shadow-md" : ""
-                      } ${isPinnedRight ? "sticky right-0 z-20 shadow-md" : ""}`}
+                    className={`border bg-gray-100 ${
+                      isPinnedLeft ? "sticky left-0 z-20 shadow-md" : ""
+                    } ${isPinnedRight ? "sticky right-0 z-20 shadow-md" : ""}`}
                     style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 );
               })}
@@ -86,11 +89,13 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`border bg-white ${isPinnedLeft
+                      className={`border bg-white ${
+                        isPinnedLeft
                           ? "sticky left-0 z-10 shadow-md bg-gray-50"
                           : ""
-                        } ${isPinnedRight ? "sticky right-0 z-10 shadow-md" : ""
-                        }`}
+                      } ${
+                        isPinnedRight ? "sticky right-0 z-10 shadow-md" : ""
+                      }`}
                       style={{ width: cell.column.getSize() }}
                     >
                       {flexRender(
@@ -114,3 +119,5 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+export const DataTable = memo(DataTableComponent) as typeof DataTableComponent;

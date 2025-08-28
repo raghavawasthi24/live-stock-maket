@@ -1,14 +1,10 @@
 "use server";
 
-// import { unstable_cacheTag as cacheTag } from "next/cache";
-
 export const getData = async () => {
-  // "use cache";
-  // cacheTag("my-data");
-
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/stock?symbols=HDFCBANK.NS,BAJFINANCE.NS,TCS.NS`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/stock?symbols=HDFCBANK.NS,BAJFINANCE.NS,TCS.NS,INFY.NS,RELIANCE.NS,ICICIBANK.NS,KOTAKBANK.NS,SBIN.NS,AXISBANK.NS,HINDUNILVR.NS
+`,
       {
         next: { tags: ["my-data"] },
         cache: "force-cache",

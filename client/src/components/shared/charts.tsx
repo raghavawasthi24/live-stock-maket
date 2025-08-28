@@ -49,7 +49,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 
 function ChartsComponent({ data }: { data: Stock[] }) {
   return (
-    <Card className="p-4 text-xs">
+    <Card className="md:p-4 text-xs">
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <XAxis dataKey="symbol" />
@@ -80,9 +80,7 @@ function ChartsComponent({ data }: { data: Stock[] }) {
 
 // memoizing chart component
 const Charts = React.memo(
-  ChartsComponent,
-  (prevProps, nextProps) =>
-    JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data)
+  ChartsComponent
 );
 
 export default Charts;
