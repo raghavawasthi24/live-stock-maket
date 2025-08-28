@@ -6,7 +6,6 @@ import { Application, Request, Response } from "express";
 import * as cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
-import { stockController } from "./controllers/stock.controller";
 
 const PORT = process.env.PORT || 5001;
 const app: Application = express();
@@ -22,26 +21,24 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello, Welcome To This Page",
   });
 });
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `${process.env.FRONTEND_URL}`,
     methods: ["GET", "POST"],
   },
 });
 
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  let intervalId: NodeJS.Timeout;
 
-  let intervalId:any;
-
-  intervalId = setInterval(async() => {
-    io.emit("response",);
+  intervalId = setInterval(async () => {
+    io.emit("response");
   }, 15000);
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
     if (intervalId) clearInterval(intervalId);
   });
 });
