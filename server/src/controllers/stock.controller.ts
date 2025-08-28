@@ -1,14 +1,14 @@
 import yahooFinance from "yahoo-finance2";
 
 const stockController = {
-  getStockData: async (req, res) => {
+  getStockData: async (data: any) => {
     try {
       // Get symbols from query or body
       // Example: /api/stocks?symbols=HDFCBANK.NS,BAJFINANCE.NS
-      const { symbols } = req.query;
+      const { symbols } = data;
 
       if (!symbols) {
-        return res.status(400).json({ error: "Please provide stock symbols" });
+        return { error: "Please provide stock symbols" };
       }
 
       const symbolList = symbols.split(",").map((s) => s.trim());
@@ -34,13 +34,12 @@ const stockController = {
         dividendYield: stock.dividendYield,
       }));
 
-      res.status(200).json({ stocks: formatted });
+      return { stocks: formatted };
     } catch (error) {
       console.error("Error fetching stock data:", error);
-      res.status(500).json({ error: "Failed to fetch stock data" });
+      return { error: "Failed to fetch stock data" };
     }
   },
 };
 
 export { stockController };
-

@@ -31,16 +31,16 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  columnPinning,
-  setColumnPinning,
+  // columnPinning,
+  // setColumnPinning,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
-    state: {
-      columnPinning,
-    },
-    onColumnPinningChange: setColumnPinning,
+    // state: {
+    //   columnPinning,
+    // },
+    // onColumnPinningChange: setColumnPinning,
     getCoreRowModel: getCoreRowModel(),
   });
 

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   LineChart,
   Line,
@@ -9,6 +11,7 @@ import {
 } from "recharts";
 import { Card } from "../ui/card";
 import { TooltipProps } from "recharts";
+import React from "react";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
   if (active && payload && payload.length) {
@@ -32,19 +35,28 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
   return null;
 };
 
-export default function Charts({ data }: { data: any[] }) {
+function ChartsComponent({ data }: { data: any[] }) {
+  console.log("Chart data render:", data);
   return (
-    <Card className="p-4">
+    <Card className="p-4 text-xs">
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <XAxis dataKey="symbol" />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          {/* <Tooltip content={<CustomTooltip />} /> */}
           <Legend />
           <Line
             type="monotone"
-            dataKey="currentPrice"
+            dataKey="price"
             stroke="#8884d8"
+            strokeWidth={2}
+            dot={{ r: 5 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="peRatio"
+            stroke="#e43232ff"
+            label="Buy Price"
             strokeWidth={2}
             dot={{ r: 5 }}
           />
@@ -53,3 +65,11 @@ export default function Charts({ data }: { data: any[] }) {
     </Card>
   );
 }
+
+// ✅ Memoized version
+const Charts = React.memo(ChartsComponent, (prevProps, nextProps) => {
+  // shallow compare arrays (you can customize if needed)
+  return JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data);
+});
+
+export default Charts;
