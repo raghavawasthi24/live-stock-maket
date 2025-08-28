@@ -69,8 +69,8 @@ export default function Home() {
       <DataTable
         columns={columns}
         data={data}
-        // columnPinning={columnPinning}
-        // setColumnPinning={setColumnPinning}
+        columnPinning={columnPinning}
+        setColumnPinning={setColumnPinning}
       />
     </Card>
   );

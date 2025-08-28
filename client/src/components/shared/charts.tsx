@@ -68,7 +68,6 @@ function ChartsComponent({ data }: { data: any[] }) {
 
 // ✅ Memoized version
 const Charts = React.memo(ChartsComponent, (prevProps, nextProps) => {
-  // shallow compare arrays (you can customize if needed)
   return JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data);
 });
 
