@@ -7,12 +7,14 @@ import { Card } from "@/components/ui/card";
 import { columns, Stock } from "@/constant";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { useEffect, useRef, useState } from "react";
+import { ClipLoader } from "react-spinners";
 import { io, Socket } from "socket.io-client";
 
-let socket:Socket<DefaultEventsMap, DefaultEventsMap>;
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default function Home() {
   const [data, setData] = useState<Stock[]>([]);
+  const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState({
     state: "Refresh",
     time: 15,
@@ -21,6 +23,7 @@ export default function Home() {
   const intervalId = useRef<NodeJS.Timeout>(null);
 
   useEffect(() => {
+    setLoading(true);
     //function to get stock data
     const fetchData = async () => {
       setCountdown((prev) => ({ ...prev, state: "Refreshing" }));
@@ -28,6 +31,7 @@ export default function Home() {
       if (result.success) {
         setData(result.data);
         setCountdown({ state: "Refresh", time: 15 });
+        setLoading(false);
       }
     };
 
@@ -52,6 +56,13 @@ export default function Home() {
       if (intervalId.current) clearInterval(intervalId.current);
     };
   }, []);
+
+  if (loading)
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <ClipLoader />
+      </div>
+    );
 
   return (
     <Card className="p-4 m-4 flex gap-4">
